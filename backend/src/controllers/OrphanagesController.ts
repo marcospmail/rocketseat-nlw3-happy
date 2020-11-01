@@ -21,7 +21,9 @@ export default {
     const { id } = req.params
     const orphanagesRepository = getRepository(orphanage)
 
-    const orphanageFound = await orphanagesRepository.findOneOrFail(id)
+    const orphanageFound = await orphanagesRepository.findOneOrFail(id, {
+      relations: ['images']
+    })
 
     return res.json(orphanagesView.render(orphanageFound))
   },
@@ -52,9 +54,10 @@ export default {
       about,
       instructions,
       opening_hours,
-      open_on_weekends,
+      open_on_weekends: open_on_weekends === 'true',
       images
     }
+
 
     const schemaValidation = Yup.object().shape({
       name: Yup.string().required(),
